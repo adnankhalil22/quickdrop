@@ -1,0 +1,41 @@
+import { Link, useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
+import './Navbar.css';
+
+export default function Navbar() {
+  const { user, isAuthenticated, logout } = useAuth();
+  const navigate = useNavigate();
+
+  async function handleLogout() {
+    await logout();
+    navigate('/');
+  }
+
+  return (
+    <header className="navbar">
+      <div className="container navbar-inner">
+        <Link to="/" className="navbar-brand">
+          QuickDrop
+        </Link>
+
+        <nav className="navbar-links">
+          {isAuthenticated ? (
+            <>
+              <span className="navbar-user">
+                Signed in as <strong>{user.name}</strong> ({user.role})
+              </span>
+              <button type="button" className="btn btn-secondary btn-sm" onClick={handleLogout}>
+                Logout
+              </button>
+            </>
+          ) : (
+            <>
+              <Link to="/login">Login</Link>
+              <Link to="/register">Register</Link>
+            </>
+          )}
+        </nav>
+      </div>
+    </header>
+  );
+}

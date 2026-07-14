@@ -7,7 +7,7 @@ Thumbs.db
 !.vscode/extensions.json
 .idea
 
-# Frontend (created in Phase 16)
+# Frontend
 frontend/node_modules
 frontend/dist
 frontend/.env
