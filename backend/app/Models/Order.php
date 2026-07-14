@@ -12,6 +12,20 @@ class Order extends Model
     use HasFactory;
 
     /**
+     * The only status transitions a manager or administrator may perform.
+     * Cancellation (by the customer, while pending) is handled separately
+     * and is not part of this forward-moving workflow.
+     *
+     * @var array<string, list<string>>
+     */
+    public const TRANSITIONS = [
+        'pending' => ['accepted', 'rejected'],
+        'accepted' => ['preparing'],
+        'preparing' => ['out_for_delivery'],
+        'out_for_delivery' => ['delivered'],
+    ];
+
+    /**
      * The attributes that are mass assignable.
      *
      * @var list<string>
@@ -62,5 +76,10 @@ class Order extends Model
     public function items(): HasMany
     {
         return $this->hasMany(OrderItem::class);
+    }
+
+    public function canTransitionTo(string $status): bool
+    {
+        return in_array($status, self::TRANSITIONS[$this->status] ?? [], true);
     }
 }

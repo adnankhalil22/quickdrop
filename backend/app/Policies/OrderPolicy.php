@@ -14,4 +14,12 @@ class OrderPolicy
     {
         return $user->id === $order->user_id;
     }
+
+    /**
+     * Determine whether the user can manage the model as the restaurant's manager.
+     */
+    public function manage(User $user, Order $order): bool
+    {
+        return $user->id === $order->restaurant->manager_id;
+    }
 }
