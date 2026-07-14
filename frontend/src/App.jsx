@@ -11,6 +11,8 @@ import Profile from './pages/customer/Profile';
 import Addresses from './pages/customer/Addresses';
 import Cart from './pages/customer/Cart';
 import Checkout from './pages/customer/Checkout';
+import OrderHistory from './pages/customer/OrderHistory';
+import OrderDetail from './pages/customer/OrderDetail';
 
 export default function App() {
   return (
@@ -29,6 +31,8 @@ export default function App() {
               <Route path="addresses" element={<Addresses />} />
               <Route path="cart" element={<Cart />} />
               <Route path="checkout" element={<Checkout />} />
+              <Route path="orders" element={<OrderHistory />} />
+              <Route path="orders/:id" element={<OrderDetail />} />
             </Route>
           </Route>
         </Routes>

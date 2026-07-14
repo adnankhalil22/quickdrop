@@ -217,6 +217,7 @@ a:hover {
 .badge-success { background: var(--color-primary-light); color: var(--color-primary-dark); }
 .badge-warning { background: var(--color-warning-light); color: var(--color-warning); }
 .badge-danger { background: var(--color-danger-light); color: var(--color-danger); }
+.badge-info { background: #eff6ff; color: #1d4ed8; }
 .badge-muted { background: #f3f4f6; color: var(--color-text-muted); }
 
 /* Grid */

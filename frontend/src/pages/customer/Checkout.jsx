@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import client from '../../api/client';
 import { getErrorMessage, getValidationErrors } from '../../api/errors';
 import { LoadingState, ErrorState } from '../../components/StateMessage';
+import { getStatusBadgeClass, formatStatusLabel } from '../../utils/orderStatus';
 
 export default function Checkout() {
   const navigate = useNavigate();
@@ -63,13 +64,21 @@ export default function Checkout() {
         <h1>Order placed!</h1>
         <p>
           Order #{placedOrder.id} from <strong>{placedOrder.restaurant.name}</strong> is now{' '}
-          <span className="badge badge-warning">{placedOrder.status}</span>.
+          <span className={`badge ${getStatusBadgeClass(placedOrder.status)}`}>
+            {formatStatusLabel(placedOrder.status)}
+          </span>
+          .
         </p>
         <p style={{ fontWeight: 700 }}>Total: ${Number(placedOrder.total).toFixed(2)}</p>
         <p>Payment: cash on delivery.</p>
-        <Link to="/restaurants" className="btn btn-primary">
-          Browse more restaurants
-        </Link>
+        <div style={{ display: 'flex', gap: 8, justifyContent: 'center' }}>
+          <Link to={`/orders/${placedOrder.id}`} className="btn btn-secondary">
+            View order
+          </Link>
+          <Link to="/restaurants" className="btn btn-primary">
+            Browse more restaurants
+          </Link>
+        </div>
       </div>
     );
   }

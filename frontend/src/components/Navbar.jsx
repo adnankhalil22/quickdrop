@@ -24,6 +24,7 @@ export default function Navbar() {
           {isAuthenticated && user.role === 'customer' && (
             <>
               <Link to="/cart">Cart</Link>
+              <Link to="/orders">My Orders</Link>
               <Link to="/addresses">Addresses</Link>
               <Link to="/profile">Profile</Link>
             </>
