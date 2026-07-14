@@ -27,7 +27,7 @@ export default function Home() {
     <div className="container">
       <section
         className="hero"
-        style={{ '--hero-image': "url('https://picsum.photos/seed/quickdrop-hero/1600/700')" }}
+        style={{ '--hero-image': "url('https://images.unsplash.com/photo-1552566626-52f8b828add9?w=1600&q=75&auto=format&fit=crop')" }}
       >
         <h1>Food from your favorite local spots, delivered.</h1>
         <p>Browse restaurants near you, build your order, and pay cash on delivery.</p>

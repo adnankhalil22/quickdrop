@@ -15,13 +15,29 @@ class MenuItemFactory extends Factory
      *
      * @return array<string, mixed>
      */
+    /**
+     * Real, verified food-dish photos (Foodish), used as demo menu item images.
+     */
+    private const IMAGES = [
+        'https://foodish-api.com/images/pizza/pizza57.jpg',
+        'https://foodish-api.com/images/burger/burger23.jpg',
+        'https://foodish-api.com/images/pasta/pasta14.jpg',
+        'https://foodish-api.com/images/dessert/dessert24.jpg',
+        'https://foodish-api.com/images/rice/rice5.jpg',
+        'https://foodish-api.com/images/biryani/biryani74.jpg',
+        'https://foodish-api.com/images/dosa/dosa30.jpg',
+        'https://foodish-api.com/images/samosa/samosa3.jpg',
+        'https://foodish-api.com/images/idly/idly72.jpg',
+        'https://foodish-api.com/images/butter-chicken/butter-chicken21.jpg',
+    ];
+
     public function definition(): array
     {
         return [
             'name' => ucfirst(fake()->words(rand(2, 3), true)),
             'description' => fake()->sentence(10),
             'price' => fake()->randomFloat(2, 2, 25),
-            'image' => 'https://picsum.photos/seed/quickdrop-food-'.fake()->unique()->numberBetween(1, 1000000).'/700/500',
+            'image' => fake()->randomElement(self::IMAGES),
             'is_available' => true,
         ];
     }
