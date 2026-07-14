@@ -53,12 +53,18 @@ export function AuthProvider({ children }) {
     }
   }, [clearSession]);
 
+  const updateUser = useCallback((nextUser) => {
+    localStorage.setItem('quickdrop_user', JSON.stringify(nextUser));
+    setUser(nextUser);
+  }, []);
+
   const value = {
     user,
     isAuthenticated: Boolean(user),
     login,
     register,
     logout,
+    updateUser,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

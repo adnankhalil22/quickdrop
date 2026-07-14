@@ -19,6 +19,16 @@ export default function Navbar() {
         </Link>
 
         <nav className="navbar-links">
+          <Link to="/restaurants">Restaurants</Link>
+
+          {isAuthenticated && user.role === 'customer' && (
+            <>
+              <Link to="/cart">Cart</Link>
+              <Link to="/addresses">Addresses</Link>
+              <Link to="/profile">Profile</Link>
+            </>
+          )}
+
           {isAuthenticated ? (
             <>
               <span className="navbar-user">

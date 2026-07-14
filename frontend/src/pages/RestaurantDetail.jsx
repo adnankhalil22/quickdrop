@@ -1,16 +1,23 @@
 import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import client from '../api/client';
 import { getErrorMessage } from '../api/errors';
+import { useAuth } from '../context/AuthContext';
 import { LoadingState, EmptyState, ErrorState } from '../components/StateMessage';
 
 export default function RestaurantDetail() {
   const { id } = useParams();
+  const { isAuthenticated, user } = useAuth();
+  const navigate = useNavigate();
+  const location = useLocation();
 
   const [restaurant, setRestaurant] = useState(null);
   const [categories, setCategories] = useState([]);
   const [status, setStatus] = useState('loading');
   const [error, setError] = useState('');
+
+  const [addingItemId, setAddingItemId] = useState(null);
+  const [cartMessage, setCartMessage] = useState(null);
 
   useEffect(() => {
     setStatus('loading');
@@ -27,8 +34,23 @@ export default function RestaurantDetail() {
       });
   }, [id]);
 
+  async function addToCart(item) {
+    setAddingItemId(item.id);
+    setCartMessage(null);
+    try {
+      await client.post('/cart/items', { menu_item_id: item.id, quantity: 1 });
+      setCartMessage({ type: 'success', text: `Added "${item.name}" to your cart.` });
+    } catch (err) {
+      setCartMessage({ type: 'error', text: getErrorMessage(err) });
+    } finally {
+      setAddingItemId(null);
+    }
+  }
+
   if (status === 'loading') return <LoadingState label="Loading menu…" />;
   if (status === 'error') return <ErrorState label={error} />;
+
+  const canOrder = isAuthenticated && user.role === 'customer';
 
   return (
     <div className="container">
@@ -43,6 +65,20 @@ export default function RestaurantDetail() {
           {Number(restaurant.minimum_order).toFixed(2)}
         </p>
       </section>
+
+      {cartMessage && (
+        <div className={`alert ${cartMessage.type === 'error' ? 'alert-danger' : ''}`} style={cartMessage.type === 'success' ? { background: 'var(--color-primary-light)', color: 'var(--color-primary-dark)' } : undefined}>
+          {cartMessage.text}
+          {cartMessage.type === 'success' && (
+            <>
+              {' '}
+              <button type="button" className="btn btn-sm btn-primary" style={{ marginLeft: 8 }} onClick={() => navigate('/cart')}>
+                View cart
+              </button>
+            </>
+          )}
+        </div>
+      )}
 
       {categories.length === 0 && <EmptyState label="This restaurant hasn't added any menu items yet." />}
 
@@ -63,6 +99,27 @@ export default function RestaurantDetail() {
                   </div>
                   {item.description && <p style={{ fontSize: 14 }}>{item.description}</p>}
                   <p style={{ fontWeight: 700, color: 'var(--color-text)' }}>${Number(item.price).toFixed(2)}</p>
+
+                  {!isAuthenticated && (
+                    <button
+                      type="button"
+                      className="btn btn-secondary btn-sm"
+                      onClick={() => navigate('/login', { state: { from: location } })}
+                    >
+                      Login to order
+                    </button>
+                  )}
+
+                  {canOrder && (
+                    <button
+                      type="button"
+                      className="btn btn-primary btn-sm"
+                      disabled={!item.is_available || addingItemId === item.id}
+                      onClick={() => addToCart(item)}
+                    >
+                      {addingItemId === item.id ? 'Adding…' : 'Add to cart'}
+                    </button>
+                  )}
                 </div>
               </div>
             ))}
