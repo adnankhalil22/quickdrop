@@ -13,6 +13,10 @@ import Cart from './pages/customer/Cart';
 import Checkout from './pages/customer/Checkout';
 import OrderHistory from './pages/customer/OrderHistory';
 import OrderDetail from './pages/customer/OrderDetail';
+import ManagerDashboard from './pages/manager/ManagerDashboard';
+import ManagerRestaurant from './pages/manager/ManagerRestaurant';
+import ManagerCategories from './pages/manager/ManagerCategories';
+import ManagerMenuItems from './pages/manager/ManagerMenuItems';
 
 export default function App() {
   return (
@@ -33,6 +37,13 @@ export default function App() {
               <Route path="checkout" element={<Checkout />} />
               <Route path="orders" element={<OrderHistory />} />
               <Route path="orders/:id" element={<OrderDetail />} />
+            </Route>
+
+            <Route element={<ProtectedRoute roles={['manager']} />}>
+              <Route path="manager" element={<ManagerDashboard />} />
+              <Route path="manager/restaurant" element={<ManagerRestaurant />} />
+              <Route path="manager/categories" element={<ManagerCategories />} />
+              <Route path="manager/menu-items" element={<ManagerMenuItems />} />
             </Route>
           </Route>
         </Routes>
