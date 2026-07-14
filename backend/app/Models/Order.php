@@ -12,9 +12,11 @@ class Order extends Model
     use HasFactory;
 
     /**
-     * The only status transitions a manager or administrator may perform.
-     * Cancellation (by the customer, while pending) is handled separately
-     * and is not part of this forward-moving workflow.
+     * The forward-moving status transitions a restaurant manager may
+     * perform. Cancellation is handled separately: customers may only
+     * cancel while pending (see OrderController@cancel), and administrators
+     * may override-cancel from any non-terminal status (see
+     * canAdminTransitionTo()).
      *
      * @var array<string, list<string>>
      */
@@ -24,6 +26,13 @@ class Order extends Model
         'preparing' => ['out_for_delivery'],
         'out_for_delivery' => ['delivered'],
     ];
+
+    /**
+     * Statuses from which no further transition is possible.
+     *
+     * @var list<string>
+     */
+    public const TERMINAL_STATUSES = ['delivered', 'cancelled', 'rejected'];
 
     /**
      * The attributes that are mass assignable.
@@ -81,5 +90,19 @@ class Order extends Model
     public function canTransitionTo(string $status): bool
     {
         return in_array($status, self::TRANSITIONS[$this->status] ?? [], true);
+    }
+
+    /**
+     * Administrators may follow the normal forward workflow, or override
+     * by cancelling the order from any status that hasn't already reached
+     * a terminal state.
+     */
+    public function canAdminTransitionTo(string $status): bool
+    {
+        if ($status === 'cancelled') {
+            return ! in_array($this->status, self::TERMINAL_STATUSES, true);
+        }
+
+        return $this->canTransitionTo($status);
     }
 }
