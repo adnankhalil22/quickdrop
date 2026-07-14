@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\AddressController;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\CartController;
+use App\Http\Controllers\Api\OrderController;
 use App\Http\Controllers\Api\ProfileController;
 use App\Http\Controllers\Api\RestaurantController;
 use Illuminate\Support\Facades\Route;
@@ -29,4 +30,6 @@ Route::middleware(['auth:sanctum', 'role:customer'])->group(function () {
     Route::put('/cart/items/{cartItem}', [CartController::class, 'updateItem']);
     Route::delete('/cart/items/{cartItem}', [CartController::class, 'removeItem']);
     Route::delete('/cart', [CartController::class, 'clear']);
+
+    Route::post('/orders', [OrderController::class, 'store']);
 });
