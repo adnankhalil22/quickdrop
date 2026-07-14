@@ -3,15 +3,57 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Order\ListOrdersRequest;
 use App\Http\Requests\Order\StoreOrderRequest;
 use App\Http\Resources\OrderResource;
 use App\Models\CartItem;
 use App\Models\Order;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Facades\DB;
 
 class OrderController extends Controller
 {
+    public function index(ListOrdersRequest $request): AnonymousResourceCollection
+    {
+        $orders = $request->user()
+            ->orders()
+            ->with('restaurant')
+            ->orderByDesc('ordered_at')
+            ->paginate($request->validated('per_page') ?? 10);
+
+        return OrderResource::collection($orders);
+    }
+
+    public function show(Order $order): JsonResponse
+    {
+        $this->authorize('view', $order);
+
+        $order->load(['items', 'restaurant', 'address', 'user']);
+
+        return response()->json([
+            'order' => new OrderResource($order),
+        ]);
+    }
+
+    public function cancel(Order $order): JsonResponse
+    {
+        $this->authorize('view', $order);
+
+        if ($order->status !== 'pending') {
+            abort(422, 'Only pending orders can be cancelled.');
+        }
+
+        $order->update(['status' => 'cancelled']);
+
+        $order->load(['items', 'restaurant', 'address', 'user']);
+
+        return response()->json([
+            'message' => 'Order cancelled successfully.',
+            'order' => new OrderResource($order),
+        ]);
+    }
+
     public function store(StoreOrderRequest $request): JsonResponse
     {
         $user = $request->user();
