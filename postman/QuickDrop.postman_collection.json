@@ -1,0 +1,748 @@
+{
+  "info": {
+    "name": "QuickDrop API",
+    "description": "Food delivery REST API built with Laravel + Sanctum. Import the accompanying QuickDrop.postman_environment.json (base_url = http://127.0.0.1:8000/api) alongside this collection. Run 'Login as Customer' / 'Login as Manager' / 'Login as Admin' first -- each saves its token into a collection variable that every other request in that role's folder already references, so you never have to copy/paste a token by hand. Login bodies default to the seeded accounts (password is \"password\" for all of them).",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "base_url", "value": "http://127.0.0.1:8000/api" },
+    { "key": "customer_token", "value": "" },
+    { "key": "manager_token", "value": "" },
+    { "key": "admin_token", "value": "" },
+    { "key": "restaurant_id", "value": "1" },
+    { "key": "address_id", "value": "" },
+    { "key": "cart_item_id", "value": "" },
+    { "key": "order_id", "value": "" },
+    { "key": "category_id", "value": "" },
+    { "key": "menu_item_id", "value": "" },
+    { "key": "user_id", "value": "" },
+    { "key": "admin_restaurant_id", "value": "" }
+  ],
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Register",
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": [
+            "if (pm.response.code === 201) { pm.collectionVariables.set('customer_token', pm.response.json().token); }"
+          ] } }],
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"New Customer\",\n  \"email\": \"newcustomer@example.com\",\n  \"phone\": \"+96170000000\",\n  \"password\": \"password123\",\n  \"password_confirmation\": \"password123\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": { "raw": "{{base_url}}/register", "host": ["{{base_url}}"], "path": ["register"] }
+          }
+        },
+        {
+          "name": "Login as Customer",
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": [
+            "if (pm.response.code === 200) { pm.collectionVariables.set('customer_token', pm.response.json().token); }"
+          ] } }],
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"customer1@quickdrop.test\",\n  \"password\": \"password\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": { "raw": "{{base_url}}/login", "host": ["{{base_url}}"], "path": ["login"] }
+          }
+        },
+        {
+          "name": "Login as Manager",
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": [
+            "if (pm.response.code === 200) { pm.collectionVariables.set('manager_token', pm.response.json().token); }"
+          ] } }],
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"manager1@quickdrop.test\",\n  \"password\": \"password\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": { "raw": "{{base_url}}/login", "host": ["{{base_url}}"], "path": ["login"] }
+          }
+        },
+        {
+          "name": "Login as Admin",
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": [
+            "if (pm.response.code === 200) { pm.collectionVariables.set('admin_token', pm.response.json().token); }"
+          ] } }],
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"admin@quickdrop.test\",\n  \"password\": \"password\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": { "raw": "{{base_url}}/login", "host": ["{{base_url}}"], "path": ["login"] }
+          }
+        },
+        {
+          "name": "Logout",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Accept", "value": "application/json" }],
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{customer_token}}", "type": "string" }] },
+            "url": { "raw": "{{base_url}}/logout", "host": ["{{base_url}}"], "path": ["logout"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Public",
+      "item": [
+        {
+          "name": "List Restaurants",
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": [
+            "if (pm.response.code === 200) { const d = pm.response.json().data; if (d && d.length) pm.collectionVariables.set('restaurant_id', d[0].id); }"
+          ] } }],
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Accept", "value": "application/json" }],
+            "url": {
+              "raw": "{{base_url}}/restaurants?search=&per_page=12",
+              "host": ["{{base_url}}"], "path": ["restaurants"],
+              "query": [{ "key": "search", "value": "" }, { "key": "per_page", "value": "12" }]
+            }
+          }
+        },
+        {
+          "name": "Get Restaurant",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Accept", "value": "application/json" }],
+            "url": { "raw": "{{base_url}}/restaurants/{{restaurant_id}}", "host": ["{{base_url}}"], "path": ["restaurants", "{{restaurant_id}}"] }
+          }
+        },
+        {
+          "name": "Get Restaurant Menu",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Accept", "value": "application/json" }],
+            "url": { "raw": "{{base_url}}/restaurants/{{restaurant_id}}/menu", "host": ["{{base_url}}"], "path": ["restaurants", "{{restaurant_id}}", "menu"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Customer",
+      "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{customer_token}}", "type": "string" }] },
+      "item": [
+        {
+          "name": "Profile",
+          "item": [
+            {
+              "name": "Get Profile",
+              "request": {
+                "method": "GET",
+                "header": [{ "key": "Accept", "value": "application/json" }],
+                "url": { "raw": "{{base_url}}/profile", "host": ["{{base_url}}"], "path": ["profile"] }
+              }
+            },
+            {
+              "name": "Update Profile",
+              "request": {
+                "method": "PUT",
+                "header": [
+                  { "key": "Accept", "value": "application/json" },
+                  { "key": "Content-Type", "value": "application/json" }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"Customer One Updated\",\n  \"email\": \"customer1@quickdrop.test\",\n  \"phone\": \"+96170111222\"\n}",
+                  "options": { "raw": { "language": "json" } }
+                },
+                "url": { "raw": "{{base_url}}/profile", "host": ["{{base_url}}"], "path": ["profile"] }
+              }
+            }
+          ]
+        },
+        {
+          "name": "Addresses",
+          "item": [
+            {
+              "name": "List Addresses",
+              "request": {
+                "method": "GET",
+                "header": [{ "key": "Accept", "value": "application/json" }],
+                "url": { "raw": "{{base_url}}/addresses", "host": ["{{base_url}}"], "path": ["addresses"] }
+              }
+            },
+            {
+              "name": "Create Address",
+              "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": [
+                "if (pm.response.code === 201) { pm.collectionVariables.set('address_id', pm.response.json().address.id); }"
+              ] } }],
+              "request": {
+                "method": "POST",
+                "header": [
+                  { "key": "Accept", "value": "application/json" },
+                  { "key": "Content-Type", "value": "application/json" }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"label\": \"Work\",\n  \"city\": \"Beirut\",\n  \"area\": \"Hamra\",\n  \"street\": \"Bliss St\",\n  \"building\": \"12\",\n  \"floor\": \"3\",\n  \"details\": \"Blue door\",\n  \"is_default\": false\n}",
+                  "options": { "raw": { "language": "json" } }
+                },
+                "url": { "raw": "{{base_url}}/addresses", "host": ["{{base_url}}"], "path": ["addresses"] }
+              }
+            },
+            {
+              "name": "Get Address",
+              "request": {
+                "method": "GET",
+                "header": [{ "key": "Accept", "value": "application/json" }],
+                "url": { "raw": "{{base_url}}/addresses/{{address_id}}", "host": ["{{base_url}}"], "path": ["addresses", "{{address_id}}"] }
+              }
+            },
+            {
+              "name": "Update Address",
+              "request": {
+                "method": "PUT",
+                "header": [
+                  { "key": "Accept", "value": "application/json" },
+                  { "key": "Content-Type", "value": "application/json" }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"label\": \"Work\",\n  \"city\": \"Beirut\",\n  \"area\": \"Hamra\",\n  \"street\": \"Bliss St\",\n  \"building\": \"12\",\n  \"floor\": \"3\",\n  \"details\": \"Blue door, ring twice\",\n  \"is_default\": true\n}",
+                  "options": { "raw": { "language": "json" } }
+                },
+                "url": { "raw": "{{base_url}}/addresses/{{address_id}}", "host": ["{{base_url}}"], "path": ["addresses", "{{address_id}}"] }
+              }
+            },
+            {
+              "name": "Delete Address",
+              "request": {
+                "method": "DELETE",
+                "header": [{ "key": "Accept", "value": "application/json" }],
+                "url": { "raw": "{{base_url}}/addresses/{{address_id}}", "host": ["{{base_url}}"], "path": ["addresses", "{{address_id}}"] }
+              }
+            }
+          ]
+        },
+        {
+          "name": "Cart",
+          "item": [
+            {
+              "name": "Get Cart",
+              "request": {
+                "method": "GET",
+                "header": [{ "key": "Accept", "value": "application/json" }],
+                "url": { "raw": "{{base_url}}/cart", "host": ["{{base_url}}"], "path": ["cart"] }
+              }
+            },
+            {
+              "name": "Add Item to Cart",
+              "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": [
+                "if (pm.response.code === 201) { const items = pm.response.json().cart.items; if (items && items.length) pm.collectionVariables.set('cart_item_id', items[items.length - 1].id); }"
+              ] } }],
+              "request": {
+                "method": "POST",
+                "header": [
+                  { "key": "Accept", "value": "application/json" },
+                  { "key": "Content-Type", "value": "application/json" }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"menu_item_id\": 1,\n  \"quantity\": 2,\n  \"notes\": \"No onions please\"\n}",
+                  "options": { "raw": { "language": "json" } }
+                },
+                "url": { "raw": "{{base_url}}/cart/items", "host": ["{{base_url}}"], "path": ["cart", "items"] }
+              }
+            },
+            {
+              "name": "Update Cart Item Quantity",
+              "request": {
+                "method": "PUT",
+                "header": [
+                  { "key": "Accept", "value": "application/json" },
+                  { "key": "Content-Type", "value": "application/json" }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"quantity\": 5,\n  \"notes\": \"No onions please\"\n}",
+                  "options": { "raw": { "language": "json" } }
+                },
+                "url": { "raw": "{{base_url}}/cart/items/{{cart_item_id}}", "host": ["{{base_url}}"], "path": ["cart", "items", "{{cart_item_id}}"] }
+              }
+            },
+            {
+              "name": "Remove Cart Item",
+              "request": {
+                "method": "DELETE",
+                "header": [{ "key": "Accept", "value": "application/json" }],
+                "url": { "raw": "{{base_url}}/cart/items/{{cart_item_id}}", "host": ["{{base_url}}"], "path": ["cart", "items", "{{cart_item_id}}"] }
+              }
+            },
+            {
+              "name": "Clear Cart",
+              "request": {
+                "method": "DELETE",
+                "header": [{ "key": "Accept", "value": "application/json" }],
+                "url": { "raw": "{{base_url}}/cart", "host": ["{{base_url}}"], "path": ["cart"] }
+              }
+            }
+          ]
+        },
+        {
+          "name": "Orders",
+          "item": [
+            {
+              "name": "List My Orders",
+              "request": {
+                "method": "GET",
+                "header": [{ "key": "Accept", "value": "application/json" }],
+                "url": { "raw": "{{base_url}}/orders", "host": ["{{base_url}}"], "path": ["orders"] }
+              }
+            },
+            {
+              "name": "Create Order (Checkout)",
+              "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": [
+                "if (pm.response.code === 201) { pm.collectionVariables.set('order_id', pm.response.json().order.id); }"
+              ] } }],
+              "request": {
+                "method": "POST",
+                "header": [
+                  { "key": "Accept", "value": "application/json" },
+                  { "key": "Content-Type", "value": "application/json" }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"address_id\": {{address_id}},\n  \"customer_notes\": \"Ring the bell twice\"\n}",
+                  "options": { "raw": { "language": "json" } }
+                },
+                "url": { "raw": "{{base_url}}/orders", "host": ["{{base_url}}"], "path": ["orders"] }
+              }
+            },
+            {
+              "name": "Get Order Details",
+              "request": {
+                "method": "GET",
+                "header": [{ "key": "Accept", "value": "application/json" }],
+                "url": { "raw": "{{base_url}}/orders/{{order_id}}", "host": ["{{base_url}}"], "path": ["orders", "{{order_id}}"] }
+              }
+            },
+            {
+              "name": "Cancel Order",
+              "request": {
+                "method": "POST",
+                "header": [{ "key": "Accept", "value": "application/json" }],
+                "url": { "raw": "{{base_url}}/orders/{{order_id}}/cancel", "host": ["{{base_url}}"], "path": ["orders", "{{order_id}}", "cancel"] }
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Manager",
+      "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{manager_token}}", "type": "string" }] },
+      "item": [
+        {
+          "name": "Restaurant",
+          "item": [
+            {
+              "name": "Get My Restaurant",
+              "request": {
+                "method": "GET",
+                "header": [{ "key": "Accept", "value": "application/json" }],
+                "url": { "raw": "{{base_url}}/manager/restaurant", "host": ["{{base_url}}"], "path": ["manager", "restaurant"] }
+              }
+            },
+            {
+              "name": "Update My Restaurant",
+              "request": {
+                "method": "PUT",
+                "header": [
+                  { "key": "Accept", "value": "application/json" },
+                  { "key": "Content-Type", "value": "application/json" }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"Updated Restaurant Name\",\n  \"description\": \"Fresh food, fast delivery.\",\n  \"phone\": \"+961 1 234 567\",\n  \"address\": \"123 Main St\",\n  \"opening_time\": \"09:00\",\n  \"closing_time\": \"23:00\",\n  \"delivery_fee\": 2.5,\n  \"minimum_order\": 10\n}",
+                  "options": { "raw": { "language": "json" } }
+                },
+                "url": { "raw": "{{base_url}}/manager/restaurant", "host": ["{{base_url}}"], "path": ["manager", "restaurant"] }
+              }
+            }
+          ]
+        },
+        {
+          "name": "Menu Categories",
+          "item": [
+            {
+              "name": "List Categories",
+              "request": {
+                "method": "GET",
+                "header": [{ "key": "Accept", "value": "application/json" }],
+                "url": { "raw": "{{base_url}}/manager/categories", "host": ["{{base_url}}"], "path": ["manager", "categories"] }
+              }
+            },
+            {
+              "name": "Create Category",
+              "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": [
+                "if (pm.response.code === 201) { pm.collectionVariables.set('category_id', pm.response.json().category.id); }"
+              ] } }],
+              "request": {
+                "method": "POST",
+                "header": [
+                  { "key": "Accept", "value": "application/json" },
+                  { "key": "Content-Type", "value": "application/json" }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"Desserts\",\n  \"description\": \"Sweet treats\"\n}",
+                  "options": { "raw": { "language": "json" } }
+                },
+                "url": { "raw": "{{base_url}}/manager/categories", "host": ["{{base_url}}"], "path": ["manager", "categories"] }
+              }
+            },
+            {
+              "name": "Get Category",
+              "request": {
+                "method": "GET",
+                "header": [{ "key": "Accept", "value": "application/json" }],
+                "url": { "raw": "{{base_url}}/manager/categories/{{category_id}}", "host": ["{{base_url}}"], "path": ["manager", "categories", "{{category_id}}"] }
+              }
+            },
+            {
+              "name": "Update Category",
+              "request": {
+                "method": "PUT",
+                "header": [
+                  { "key": "Accept", "value": "application/json" },
+                  { "key": "Content-Type", "value": "application/json" }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"Desserts & Sweets\",\n  \"description\": \"Sweet treats and more\"\n}",
+                  "options": { "raw": { "language": "json" } }
+                },
+                "url": { "raw": "{{base_url}}/manager/categories/{{category_id}}", "host": ["{{base_url}}"], "path": ["manager", "categories", "{{category_id}}"] }
+              }
+            },
+            {
+              "name": "Delete Category",
+              "request": {
+                "method": "DELETE",
+                "header": [{ "key": "Accept", "value": "application/json" }],
+                "url": { "raw": "{{base_url}}/manager/categories/{{category_id}}", "host": ["{{base_url}}"], "path": ["manager", "categories", "{{category_id}}"] }
+              }
+            }
+          ]
+        },
+        {
+          "name": "Menu Items",
+          "item": [
+            {
+              "name": "List Menu Items",
+              "request": {
+                "method": "GET",
+                "header": [{ "key": "Accept", "value": "application/json" }],
+                "url": { "raw": "{{base_url}}/manager/menu-items", "host": ["{{base_url}}"], "path": ["manager", "menu-items"] }
+              }
+            },
+            {
+              "name": "Create Menu Item",
+              "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": [
+                "if (pm.response.code === 201) { pm.collectionVariables.set('menu_item_id', pm.response.json().menu_item.id); }"
+              ] } }],
+              "request": {
+                "method": "POST",
+                "header": [
+                  { "key": "Accept", "value": "application/json" },
+                  { "key": "Content-Type", "value": "application/json" }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"menu_category_id\": {{category_id}},\n  \"name\": \"Chocolate Cake\",\n  \"description\": \"Rich and moist\",\n  \"price\": 6.50,\n  \"is_available\": true\n}",
+                  "options": { "raw": { "language": "json" } }
+                },
+                "url": { "raw": "{{base_url}}/manager/menu-items", "host": ["{{base_url}}"], "path": ["manager", "menu-items"] }
+              }
+            },
+            {
+              "name": "Get Menu Item",
+              "request": {
+                "method": "GET",
+                "header": [{ "key": "Accept", "value": "application/json" }],
+                "url": { "raw": "{{base_url}}/manager/menu-items/{{menu_item_id}}", "host": ["{{base_url}}"], "path": ["manager", "menu-items", "{{menu_item_id}}"] }
+              }
+            },
+            {
+              "name": "Update Menu Item (e.g. mark unavailable)",
+              "request": {
+                "method": "PUT",
+                "header": [
+                  { "key": "Accept", "value": "application/json" },
+                  { "key": "Content-Type", "value": "application/json" }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"menu_category_id\": {{category_id}},\n  \"name\": \"Chocolate Cake\",\n  \"description\": \"Rich and moist\",\n  \"price\": 6.50,\n  \"is_available\": false\n}",
+                  "options": { "raw": { "language": "json" } }
+                },
+                "url": { "raw": "{{base_url}}/manager/menu-items/{{menu_item_id}}", "host": ["{{base_url}}"], "path": ["manager", "menu-items", "{{menu_item_id}}"] }
+              }
+            },
+            {
+              "name": "Delete Menu Item",
+              "request": {
+                "method": "DELETE",
+                "header": [{ "key": "Accept", "value": "application/json" }],
+                "url": { "raw": "{{base_url}}/manager/menu-items/{{menu_item_id}}", "host": ["{{base_url}}"], "path": ["manager", "menu-items", "{{menu_item_id}}"] }
+              }
+            }
+          ]
+        },
+        {
+          "name": "Orders",
+          "item": [
+            {
+              "name": "List Restaurant Orders",
+              "request": {
+                "method": "GET",
+                "header": [{ "key": "Accept", "value": "application/json" }],
+                "url": { "raw": "{{base_url}}/manager/orders", "host": ["{{base_url}}"], "path": ["manager", "orders"] }
+              }
+            },
+            {
+              "name": "Get Order Details",
+              "request": {
+                "method": "GET",
+                "header": [{ "key": "Accept", "value": "application/json" }],
+                "url": { "raw": "{{base_url}}/manager/orders/{{order_id}}", "host": ["{{base_url}}"], "path": ["manager", "orders", "{{order_id}}"] }
+              }
+            },
+            {
+              "name": "Update Order Status (accept/reject/advance)",
+              "request": {
+                "method": "PUT",
+                "header": [
+                  { "key": "Accept", "value": "application/json" },
+                  { "key": "Content-Type", "value": "application/json" }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"status\": \"accepted\"\n}",
+                  "options": { "raw": { "language": "json" } }
+                },
+                "url": { "raw": "{{base_url}}/manager/orders/{{order_id}}/status", "host": ["{{base_url}}"], "path": ["manager", "orders", "{{order_id}}", "status"] }
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Admin",
+      "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{admin_token}}", "type": "string" }] },
+      "item": [
+        {
+          "name": "Dashboard",
+          "item": [
+            {
+              "name": "Get Dashboard Stats",
+              "request": {
+                "method": "GET",
+                "header": [{ "key": "Accept", "value": "application/json" }],
+                "url": { "raw": "{{base_url}}/admin/dashboard", "host": ["{{base_url}}"], "path": ["admin", "dashboard"] }
+              }
+            }
+          ]
+        },
+        {
+          "name": "Users",
+          "item": [
+            {
+              "name": "List Users",
+              "request": {
+                "method": "GET",
+                "header": [{ "key": "Accept", "value": "application/json" }],
+                "url": {
+                  "raw": "{{base_url}}/admin/users?role=",
+                  "host": ["{{base_url}}"], "path": ["admin", "users"],
+                  "query": [{ "key": "role", "value": "", "description": "customer | manager | admin (optional filter)" }]
+                }
+              }
+            },
+            {
+              "name": "Create User",
+              "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": [
+                "if (pm.response.code === 201) { pm.collectionVariables.set('user_id', pm.response.json().user.id); }"
+              ] } }],
+              "request": {
+                "method": "POST",
+                "header": [
+                  { "key": "Accept", "value": "application/json" },
+                  { "key": "Content-Type", "value": "application/json" }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"New Manager\",\n  \"email\": \"newmanager@quickdrop.test\",\n  \"phone\": \"+96170000000\",\n  \"password\": \"password123\",\n  \"role\": \"manager\"\n}",
+                  "options": { "raw": { "language": "json" } }
+                },
+                "url": { "raw": "{{base_url}}/admin/users", "host": ["{{base_url}}"], "path": ["admin", "users"] }
+              }
+            },
+            {
+              "name": "Get User",
+              "request": {
+                "method": "GET",
+                "header": [{ "key": "Accept", "value": "application/json" }],
+                "url": { "raw": "{{base_url}}/admin/users/{{user_id}}", "host": ["{{base_url}}"], "path": ["admin", "users", "{{user_id}}"] }
+              }
+            },
+            {
+              "name": "Update User",
+              "request": {
+                "method": "PUT",
+                "header": [
+                  { "key": "Accept", "value": "application/json" },
+                  { "key": "Content-Type", "value": "application/json" }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"New Manager Updated\",\n  \"email\": \"newmanager@quickdrop.test\",\n  \"phone\": \"+96170000000\",\n  \"role\": \"manager\"\n}",
+                  "options": { "raw": { "language": "json" } }
+                },
+                "url": { "raw": "{{base_url}}/admin/users/{{user_id}}", "host": ["{{base_url}}"], "path": ["admin", "users", "{{user_id}}"] }
+              }
+            },
+            {
+              "name": "Delete User",
+              "request": {
+                "method": "DELETE",
+                "header": [{ "key": "Accept", "value": "application/json" }],
+                "url": { "raw": "{{base_url}}/admin/users/{{user_id}}", "host": ["{{base_url}}"], "path": ["admin", "users", "{{user_id}}"] }
+              }
+            }
+          ]
+        },
+        {
+          "name": "Restaurants",
+          "item": [
+            {
+              "name": "List All Restaurants",
+              "request": {
+                "method": "GET",
+                "header": [{ "key": "Accept", "value": "application/json" }],
+                "url": { "raw": "{{base_url}}/admin/restaurants", "host": ["{{base_url}}"], "path": ["admin", "restaurants"] }
+              }
+            },
+            {
+              "name": "Create Restaurant",
+              "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": [
+                "if (pm.response.code === 201) { pm.collectionVariables.set('admin_restaurant_id', pm.response.json().restaurant.id); }"
+              ] } }],
+              "request": {
+                "method": "POST",
+                "header": [
+                  { "key": "Accept", "value": "application/json" },
+                  { "key": "Content-Type", "value": "application/json" }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"manager_id\": null,\n  \"name\": \"New Restaurant\",\n  \"description\": \"A brand new place\",\n  \"phone\": \"+961 1 000 000\",\n  \"address\": \"1 New St\",\n  \"opening_time\": \"08:00\",\n  \"closing_time\": \"22:00\",\n  \"delivery_fee\": 2,\n  \"minimum_order\": 5,\n  \"is_active\": true\n}",
+                  "options": { "raw": { "language": "json" } }
+                },
+                "url": { "raw": "{{base_url}}/admin/restaurants", "host": ["{{base_url}}"], "path": ["admin", "restaurants"] }
+              }
+            },
+            {
+              "name": "Get Restaurant",
+              "request": {
+                "method": "GET",
+                "header": [{ "key": "Accept", "value": "application/json" }],
+                "url": { "raw": "{{base_url}}/admin/restaurants/{{admin_restaurant_id}}", "host": ["{{base_url}}"], "path": ["admin", "restaurants", "{{admin_restaurant_id}}"] }
+              }
+            },
+            {
+              "name": "Update Restaurant (assign manager / activate / deactivate)",
+              "request": {
+                "method": "PUT",
+                "header": [
+                  { "key": "Accept", "value": "application/json" },
+                  { "key": "Content-Type", "value": "application/json" }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"manager_id\": null,\n  \"name\": \"New Restaurant\",\n  \"description\": \"A brand new place\",\n  \"phone\": \"+961 1 000 000\",\n  \"address\": \"1 New St\",\n  \"opening_time\": \"08:00\",\n  \"closing_time\": \"22:00\",\n  \"delivery_fee\": 2,\n  \"minimum_order\": 5,\n  \"is_active\": false\n}",
+                  "options": { "raw": { "language": "json" } }
+                },
+                "url": { "raw": "{{base_url}}/admin/restaurants/{{admin_restaurant_id}}", "host": ["{{base_url}}"], "path": ["admin", "restaurants", "{{admin_restaurant_id}}"] }
+              }
+            },
+            {
+              "name": "Delete Restaurant",
+              "request": {
+                "method": "DELETE",
+                "header": [{ "key": "Accept", "value": "application/json" }],
+                "url": { "raw": "{{base_url}}/admin/restaurants/{{admin_restaurant_id}}", "host": ["{{base_url}}"], "path": ["admin", "restaurants", "{{admin_restaurant_id}}"] }
+              }
+            }
+          ]
+        },
+        {
+          "name": "Orders",
+          "item": [
+            {
+              "name": "List All Orders",
+              "request": {
+                "method": "GET",
+                "header": [{ "key": "Accept", "value": "application/json" }],
+                "url": { "raw": "{{base_url}}/admin/orders", "host": ["{{base_url}}"], "path": ["admin", "orders"] }
+              }
+            },
+            {
+              "name": "Get Order Details",
+              "request": {
+                "method": "GET",
+                "header": [{ "key": "Accept", "value": "application/json" }],
+                "url": { "raw": "{{base_url}}/admin/orders/{{order_id}}", "host": ["{{base_url}}"], "path": ["admin", "orders", "{{order_id}}"] }
+              }
+            },
+            {
+              "name": "Update Order Status (including override-cancel)",
+              "request": {
+                "method": "PUT",
+                "header": [
+                  { "key": "Accept", "value": "application/json" },
+                  { "key": "Content-Type", "value": "application/json" }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"status\": \"cancelled\"\n}",
+                  "options": { "raw": { "language": "json" } }
+                },
+                "url": { "raw": "{{base_url}}/admin/orders/{{order_id}}/status", "host": ["{{base_url}}"], "path": ["admin", "orders", "{{order_id}}", "status"] }
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
