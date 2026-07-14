@@ -28,3 +28,12 @@ const MANAGER_TRANSITIONS = {
 export function getNextStatuses(status) {
   return MANAGER_TRANSITIONS[status] || [];
 }
+
+const TERMINAL_STATUSES = ['delivered', 'cancelled', 'rejected'];
+
+// Mirrors Order::canAdminTransitionTo(): the manager's forward workflow,
+// plus an override-cancel from any status that hasn't already terminated.
+export function getAdminNextStatuses(status) {
+  const forward = getNextStatuses(status);
+  return TERMINAL_STATUSES.includes(status) ? forward : [...forward, 'cancelled'];
+}

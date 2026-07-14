@@ -19,6 +19,11 @@ import ManagerCategories from './pages/manager/ManagerCategories';
 import ManagerMenuItems from './pages/manager/ManagerMenuItems';
 import ManagerOrders from './pages/manager/ManagerOrders';
 import ManagerOrderDetail from './pages/manager/ManagerOrderDetail';
+import AdminDashboard from './pages/admin/AdminDashboard';
+import AdminUsers from './pages/admin/AdminUsers';
+import AdminRestaurants from './pages/admin/AdminRestaurants';
+import AdminOrders from './pages/admin/AdminOrders';
+import AdminOrderDetail from './pages/admin/AdminOrderDetail';
 
 export default function App() {
   return (
@@ -48,6 +53,14 @@ export default function App() {
               <Route path="manager/menu-items" element={<ManagerMenuItems />} />
               <Route path="manager/orders" element={<ManagerOrders />} />
               <Route path="manager/orders/:id" element={<ManagerOrderDetail />} />
+            </Route>
+
+            <Route element={<ProtectedRoute roles={['admin']} />}>
+              <Route path="admin" element={<AdminDashboard />} />
+              <Route path="admin/users" element={<AdminUsers />} />
+              <Route path="admin/restaurants" element={<AdminRestaurants />} />
+              <Route path="admin/orders" element={<AdminOrders />} />
+              <Route path="admin/orders/:id" element={<AdminOrderDetail />} />
             </Route>
           </Route>
         </Routes>

@@ -40,6 +40,15 @@ export default function Navbar() {
             </>
           )}
 
+          {isAuthenticated && user.role === 'admin' && (
+            <>
+              <Link to="/admin">Dashboard</Link>
+              <Link to="/admin/users">Users</Link>
+              <Link to="/admin/restaurants">Restaurants</Link>
+              <Link to="/admin/orders">Orders</Link>
+            </>
+          )}
+
           {isAuthenticated ? (
             <>
               <span className="navbar-user">
