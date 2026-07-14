@@ -25,11 +25,12 @@ export default function Home() {
 
   return (
     <div className="container">
-      <section style={{ textAlign: 'center', padding: '40px 0 32px' }}>
+      <section
+        className="hero"
+        style={{ '--hero-image': "url('https://picsum.photos/seed/quickdrop-hero/1600/700')" }}
+      >
         <h1>Food from your favorite local spots, delivered.</h1>
-        <p style={{ fontSize: 18, maxWidth: 560, margin: '0 auto 20px' }}>
-          Browse restaurants near you, build your order, and pay cash on delivery.
-        </p>
+        <p>Browse restaurants near you, build your order, and pay cash on delivery.</p>
         <Link to="/restaurants" className="btn btn-primary">
           Browse restaurants
         </Link>

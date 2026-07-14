@@ -26,7 +26,7 @@ class RestaurantFactory extends Factory
             'description' => fake()->sentence(12),
             'phone' => fake()->numerify('+961 1 ### ###'),
             'address' => fake()->streetAddress(),
-            'image' => null,
+            'image' => 'https://picsum.photos/seed/quickdrop-restaurant-'.fake()->unique()->numberBetween(1, 1000000).'/900/500',
             'opening_time' => '09:00',
             'closing_time' => '23:00',
             'delivery_fee' => fake()->randomElement([1.5, 2, 2.5, 3]),

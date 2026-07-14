@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import './Navbar.css';
@@ -5,8 +6,14 @@ import './Navbar.css';
 export default function Navbar() {
   const { user, isAuthenticated, logout } = useAuth();
   const navigate = useNavigate();
+  const [menuOpen, setMenuOpen] = useState(false);
+
+  function closeMenu() {
+    setMenuOpen(false);
+  }
 
   async function handleLogout() {
+    closeMenu();
     await logout();
     navigate('/');
   }
@@ -14,55 +21,69 @@ export default function Navbar() {
   return (
     <header className="navbar">
       <div className="container navbar-inner">
-        <Link to="/" className="navbar-brand">
+        <Link to="/" className="navbar-brand" onClick={closeMenu}>
           QuickDrop
         </Link>
 
-        <nav className="navbar-links">
-          <Link to="/restaurants">Restaurants</Link>
+        <button
+          type="button"
+          className="navbar-toggle"
+          aria-label="Toggle menu"
+          aria-expanded={menuOpen}
+          onClick={() => setMenuOpen((open) => !open)}
+        >
+          <span />
+          <span />
+          <span />
+        </button>
+
+        <nav className={`navbar-links ${menuOpen ? 'is-open' : ''}`}>
+          <Link to="/restaurants" onClick={closeMenu}>
+            Restaurants
+          </Link>
 
           {isAuthenticated && user.role === 'customer' && (
             <>
-              <Link to="/cart">Cart</Link>
-              <Link to="/orders">My Orders</Link>
-              <Link to="/addresses">Addresses</Link>
-              <Link to="/profile">Profile</Link>
+              <Link to="/cart" onClick={closeMenu}>Cart</Link>
+              <Link to="/orders" onClick={closeMenu}>My Orders</Link>
+              <Link to="/addresses" onClick={closeMenu}>Addresses</Link>
+              <Link to="/profile" onClick={closeMenu}>Profile</Link>
             </>
           )}
 
           {isAuthenticated && user.role === 'manager' && (
             <>
-              <Link to="/manager">Dashboard</Link>
-              <Link to="/manager/restaurant">Restaurant</Link>
-              <Link to="/manager/categories">Categories</Link>
-              <Link to="/manager/menu-items">Menu Items</Link>
-              <Link to="/manager/orders">Orders</Link>
+              <Link to="/manager" onClick={closeMenu}>Dashboard</Link>
+              <Link to="/manager/restaurant" onClick={closeMenu}>Restaurant</Link>
+              <Link to="/manager/categories" onClick={closeMenu}>Categories</Link>
+              <Link to="/manager/menu-items" onClick={closeMenu}>Menu Items</Link>
+              <Link to="/manager/orders" onClick={closeMenu}>Orders</Link>
             </>
           )}
 
           {isAuthenticated && user.role === 'admin' && (
             <>
-              <Link to="/admin">Dashboard</Link>
-              <Link to="/admin/users">Users</Link>
-              <Link to="/admin/restaurants">Restaurants</Link>
-              <Link to="/admin/orders">Orders</Link>
+              <Link to="/admin" onClick={closeMenu}>Dashboard</Link>
+              <Link to="/admin/users" onClick={closeMenu}>Users</Link>
+              <Link to="/admin/restaurants" onClick={closeMenu}>Restaurants</Link>
+              <Link to="/admin/orders" onClick={closeMenu}>Orders</Link>
             </>
           )}
 
           {isAuthenticated ? (
-            <>
+            <div className="navbar-account">
               <span className="navbar-user">
                 Signed in as <strong>{user.name}</strong> ({user.role})
               </span>
               <button type="button" className="btn btn-secondary btn-sm" onClick={handleLogout}>
                 Logout
               </button>
-            </>
+            </div>
           ) : (
-            <>
-              <Link to="/login">Login</Link>
-              <Link to="/register">Register</Link>
-            </>
+            <div className="navbar-account">
+              <Link to="/login" onClick={closeMenu}>Login</Link>
+              <Link to="/register" onClick={closeMenu}>Register</Link>
+            </div>
           )}
         </nav>
       </div>

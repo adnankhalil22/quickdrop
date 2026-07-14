@@ -88,7 +88,7 @@ export default function ManagerCategories() {
 
   return (
     <div className="container" style={{ maxWidth: 560 }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+      <div className="page-header">
         <h1>Menu Categories</h1>
         {mode === 'list' && (
           <button type="button" className="btn btn-primary btn-sm" onClick={startCreate}>
@@ -136,12 +136,12 @@ export default function ManagerCategories() {
         <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
           {categories.map((category) => (
             <div key={category.id} className="card">
-              <div className="card-body" style={{ display: 'flex', justifyContent: 'space-between', gap: 12 }}>
+              <div className="card-body list-row">
                 <div>
                   <strong>{category.name}</strong>
                   {category.description && <p style={{ fontSize: 14, margin: '4px 0 0' }}>{category.description}</p>}
                 </div>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+                <div className="list-row-actions">
                   <button type="button" className="btn btn-secondary btn-sm" onClick={() => startEdit(category)}>
                     Edit
                   </button>

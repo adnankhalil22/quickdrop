@@ -91,11 +91,14 @@ export default function Cart() {
       <div style={{ display: 'flex', flexDirection: 'column', gap: 12, marginBottom: 24 }}>
         {cart.items.map((item) => (
           <div key={item.id} className="card">
-            <div className="card-body" style={{ display: 'flex', justifyContent: 'space-between', gap: 12 }}>
-              <div>
-                <strong>{item.name}</strong>
-                <p style={{ fontSize: 14, margin: '2px 0' }}>${Number(item.unit_price).toFixed(2)} each</p>
-                {item.notes && <p style={{ fontSize: 13, margin: 0 }}>Note: {item.notes}</p>}
+            <div className="card-body list-row">
+              <div className="thumb-row">
+                {item.image && <div className="thumb" style={{ backgroundImage: `url(${item.image})` }} />}
+                <div>
+                  <strong>{item.name}</strong>
+                  <p style={{ fontSize: 14, margin: '2px 0' }}>${Number(item.unit_price).toFixed(2)} each</p>
+                  {item.notes && <p style={{ fontSize: 13, margin: 0 }}>Note: {item.notes}</p>}
+                </div>
               </div>
               <div style={{ textAlign: 'right' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 8, justifyContent: 'flex-end' }}>

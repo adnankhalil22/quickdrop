@@ -51,7 +51,7 @@ export default function ManagerOrders() {
                 className="card"
                 style={{ display: 'block', color: 'inherit' }}
               >
-                <div className="card-body" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <div className="card-body list-row">
                   <div>
                     <strong>Order #{order.id}</strong>
                     <p style={{ fontSize: 13, margin: '2px 0 0' }}>

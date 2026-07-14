@@ -60,7 +60,7 @@ export default function AdminOrderDetail() {
 
   return (
     <div className="container" style={{ maxWidth: 560 }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+      <div className="page-header">
         <div>
           <h1 style={{ marginBottom: 4 }}>Order #{order.id}</h1>
           <p style={{ margin: 0 }}>{new Date(order.ordered_at).toLocaleString()}</p>
@@ -90,7 +90,7 @@ export default function AdminOrderDetail() {
         <div className="card-body">
           <h3>Items</h3>
           {order.items.map((item) => (
-            <div key={item.id} style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 6 }}>
+            <div key={item.id} className="summary-line" style={{ marginBottom: 6 }}>
               <span>
                 {item.quantity} × {item.item_name}
               </span>
@@ -99,15 +99,15 @@ export default function AdminOrderDetail() {
           ))}
 
           <div style={{ borderTop: '1px solid var(--color-border)', marginTop: 12, paddingTop: 12 }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+            <div className="summary-line">
               <span>Subtotal</span>
               <span>${Number(order.subtotal).toFixed(2)}</span>
             </div>
-            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+            <div className="summary-line">
               <span>Delivery fee</span>
               <span>${Number(order.delivery_fee).toFixed(2)}</span>
             </div>
-            <div style={{ display: 'flex', justifyContent: 'space-between', fontWeight: 700 }}>
+            <div className="summary-line" style={{ fontWeight: 700 }}>
               <span>Total</span>
               <span>${Number(order.total).toFixed(2)}</span>
             </div>
@@ -116,7 +116,7 @@ export default function AdminOrderDetail() {
       </div>
 
       {nextStatuses.length > 0 && (
-        <div style={{ display: 'flex', gap: 8, marginTop: 16, flexWrap: 'wrap' }}>
+        <div className="action-row">
           {nextStatuses.map((nextStatus) => (
             <button
               key={nextStatus}

@@ -54,6 +54,13 @@ export default function RestaurantDetail() {
 
   return (
     <div className="container">
+      {restaurant.image && (
+        <div
+          className="card-media"
+          style={{ backgroundImage: `url(${restaurant.image})`, height: 220, borderRadius: 'var(--radius-lg)', marginBottom: 20 }}
+        />
+      )}
+
       <section style={{ marginBottom: 32 }}>
         <h1>{restaurant.name}</h1>
         {restaurant.description && <p>{restaurant.description}</p>}
@@ -91,14 +98,19 @@ export default function RestaurantDetail() {
             {category.menu_items.map((item) => (
               <div key={item.id} className="card">
                 <div className="card-body">
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 8 }}>
-                    <h3 style={{ marginBottom: 4 }}>{item.name}</h3>
-                    <span className={`badge ${item.is_available ? 'badge-success' : 'badge-muted'}`}>
-                      {item.is_available ? 'Available' : 'Unavailable'}
-                    </span>
+                  <div className="thumb-row">
+                    {item.image && <div className="thumb thumb-lg" style={{ backgroundImage: `url(${item.image})` }} />}
+                    <div style={{ flex: 1, minWidth: 0 }}>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 8, flexWrap: 'wrap' }}>
+                        <h3 style={{ marginBottom: 4 }}>{item.name}</h3>
+                        <span className={`badge ${item.is_available ? 'badge-success' : 'badge-muted'}`}>
+                          {item.is_available ? 'Available' : 'Unavailable'}
+                        </span>
+                      </div>
+                      {item.description && <p style={{ fontSize: 14 }}>{item.description}</p>}
+                      <p style={{ fontWeight: 700, color: 'var(--color-text)' }}>${Number(item.price).toFixed(2)}</p>
+                    </div>
                   </div>
-                  {item.description && <p style={{ fontSize: 14 }}>{item.description}</p>}
-                  <p style={{ fontWeight: 700, color: 'var(--color-text)' }}>${Number(item.price).toFixed(2)}</p>
 
                   {!isAuthenticated && (
                     <button

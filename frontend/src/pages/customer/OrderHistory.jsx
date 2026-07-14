@@ -53,7 +53,7 @@ export default function OrderHistory() {
                 className="card"
                 style={{ display: 'block', color: 'inherit' }}
               >
-                <div className="card-body" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <div className="card-body list-row">
                   <div>
                     <strong>{order.restaurant.name}</strong>
                     <p style={{ fontSize: 13, margin: '2px 0 0' }}>

@@ -93,7 +93,7 @@ export default function AdminUsers() {
 
   return (
     <div className="container" style={{ maxWidth: 640 }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+      <div className="page-header">
         <h1>Manage Users</h1>
         {mode === 'list' && (
           <button type="button" className="btn btn-primary btn-sm" onClick={startCreate}>
@@ -187,7 +187,7 @@ export default function AdminUsers() {
         <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
           {users.map((targetUser) => (
             <div key={targetUser.id} className="card">
-              <div className="card-body" style={{ display: 'flex', justifyContent: 'space-between', gap: 12 }}>
+              <div className="card-body list-row">
                 <div>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                     <strong>{targetUser.name}</strong>
@@ -198,7 +198,7 @@ export default function AdminUsers() {
                     {targetUser.email} {targetUser.phone ? `· ${targetUser.phone}` : ''}
                   </p>
                 </div>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+                <div className="list-row-actions">
                   <button type="button" className="btn btn-secondary btn-sm" onClick={() => startEdit(targetUser)}>
                     Edit
                   </button>

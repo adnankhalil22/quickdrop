@@ -8,6 +8,7 @@ const emptyForm = {
   description: '',
   phone: '',
   address: '',
+  image: '',
   opening_time: '',
   closing_time: '',
   delivery_fee: '',
@@ -32,6 +33,7 @@ export default function ManagerRestaurant() {
           description: r.description || '',
           phone: r.phone || '',
           address: r.address,
+          image: r.image || '',
           opening_time: r.opening_time?.slice(0, 5) || '',
           closing_time: r.closing_time?.slice(0, 5) || '',
           delivery_fee: r.delivery_fee,
@@ -104,6 +106,19 @@ export default function ManagerRestaurant() {
           <label htmlFor="address">Address</label>
           <input id="address" name="address" value={form.address} onChange={handleChange} required />
           {errors.address && <div className="field-error">{errors.address[0]}</div>}
+        </div>
+
+        <div className="field">
+          <label htmlFor="image">Image URL (optional)</label>
+          <input
+            id="image"
+            name="image"
+            value={form.image}
+            onChange={handleChange}
+            placeholder="https://example.com/restaurant.jpg"
+          />
+          {errors.image && <div className="field-error">{errors.image[0]}</div>}
+          {form.image && <div className="thumb thumb-lg" style={{ marginTop: 8, backgroundImage: `url(${form.image})` }} />}
         </div>
 
         <div style={{ display: 'flex', gap: 12 }}>

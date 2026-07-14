@@ -3,16 +3,18 @@ import { Link } from 'react-router-dom';
 export default function RestaurantCard({ restaurant }) {
   return (
     <Link to={`/restaurants/${restaurant.id}`} className="card" style={{ display: 'block', color: 'inherit' }}>
-      <div
-        style={{
-          height: 140,
-          background: restaurant.image ? `url(${restaurant.image}) center/cover` : 'var(--color-primary-light)',
-          borderTopLeftRadius: 'var(--radius)',
-          borderTopRightRadius: 'var(--radius)',
-        }}
-      />
+      {restaurant.image ? (
+        <div className="card-media" style={{ backgroundImage: `url(${restaurant.image})` }} />
+      ) : (
+        <div className="card-media">
+          <div className="card-media-placeholder">🍽️</div>
+        </div>
+      )}
       <div className="card-body">
-        <h3 style={{ marginBottom: 4 }}>{restaurant.name}</h3>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 8 }}>
+          <h3 style={{ marginBottom: 4 }}>{restaurant.name}</h3>
+          {restaurant.is_active === false && <span className="badge badge-muted">Inactive</span>}
+        </div>
         <p style={{ fontSize: 14, marginBottom: 10 }}>
           {restaurant.opening_time?.slice(0, 5)} – {restaurant.closing_time?.slice(0, 5)}
         </p>

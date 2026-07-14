@@ -71,7 +71,7 @@ export default function Checkout() {
         </p>
         <p style={{ fontWeight: 700 }}>Total: ${Number(placedOrder.total).toFixed(2)}</p>
         <p>Payment: cash on delivery.</p>
-        <div style={{ display: 'flex', gap: 8, justifyContent: 'center' }}>
+        <div className="action-row" style={{ justifyContent: 'center' }}>
           <Link to={`/orders/${placedOrder.id}`} className="btn btn-secondary">
             View order
           </Link>
@@ -105,15 +105,15 @@ export default function Checkout() {
         <div className="card-body">
           <h3>Order summary</h3>
           <p>{cart.items.length} item(s) from {cart.restaurant.name}</p>
-          <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+          <div className="summary-line">
             <span>Subtotal</span>
             <span>${Number(cart.subtotal).toFixed(2)}</span>
           </div>
-          <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+          <div className="summary-line">
             <span>Delivery fee</span>
             <span>${Number(cart.delivery_fee).toFixed(2)}</span>
           </div>
-          <div style={{ display: 'flex', justifyContent: 'space-between', fontWeight: 700 }}>
+          <div className="summary-line" style={{ fontWeight: 700 }}>
             <span>Total</span>
             <span>${Number(cart.total).toFixed(2)}</span>
           </div>
@@ -130,26 +130,13 @@ export default function Checkout() {
           <div className="field">
             <label>Delivery address</label>
             {addresses.map((address) => (
-              <label
-                key={address.id}
-                style={{
-                  display: 'flex',
-                  gap: 8,
-                  alignItems: 'flex-start',
-                  border: '1px solid var(--color-border)',
-                  borderRadius: 'var(--radius)',
-                  padding: 10,
-                  marginBottom: 8,
-                  fontWeight: 400,
-                }}
-              >
+              <label key={address.id} className="radio-card">
                 <input
                   type="radio"
                   name="address_id"
                   value={address.id}
                   checked={addressId === String(address.id)}
                   onChange={(event) => setAddressId(event.target.value)}
-                  style={{ width: 'auto', marginTop: 4 }}
                 />
                 <span>
                   <strong>{address.label}</strong>

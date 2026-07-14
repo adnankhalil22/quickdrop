@@ -21,7 +21,7 @@ class MenuItemFactory extends Factory
             'name' => ucfirst(fake()->words(rand(2, 3), true)),
             'description' => fake()->sentence(10),
             'price' => fake()->randomFloat(2, 2, 25),
-            'image' => null,
+            'image' => 'https://picsum.photos/seed/quickdrop-food-'.fake()->unique()->numberBetween(1, 1000000).'/700/500',
             'is_available' => true,
         ];
     }

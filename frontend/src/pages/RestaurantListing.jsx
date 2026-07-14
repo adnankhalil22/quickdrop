@@ -46,18 +46,12 @@ export default function RestaurantListing() {
     <div className="container">
       <h1>Restaurants</h1>
 
-      <form onSubmit={handleSearchSubmit} style={{ display: 'flex', gap: 8, marginBottom: 24, maxWidth: 420 }}>
+      <form onSubmit={handleSearchSubmit} className="search-row">
         <input
           type="search"
           placeholder="Search restaurants…"
           value={searchInput}
           onChange={(event) => setSearchInput(event.target.value)}
-          style={{
-            flex: 1,
-            padding: '10px 12px',
-            borderRadius: 'var(--radius)',
-            border: '1px solid var(--color-border)',
-          }}
         />
         <button type="submit" className="btn btn-secondary">
           Search

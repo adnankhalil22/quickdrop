@@ -10,6 +10,7 @@ const emptyForm = {
   description: '',
   phone: '',
   address: '',
+  image: '',
   opening_time: '',
   closing_time: '',
   delivery_fee: '',
@@ -74,6 +75,7 @@ export default function AdminRestaurants() {
       description: restaurant.description || '',
       phone: restaurant.phone || '',
       address: restaurant.address,
+      image: restaurant.image || '',
       opening_time: restaurant.opening_time?.slice(0, 5) || '',
       closing_time: restaurant.closing_time?.slice(0, 5) || '',
       delivery_fee: restaurant.delivery_fee,
@@ -130,7 +132,7 @@ export default function AdminRestaurants() {
 
   return (
     <div className="container" style={{ maxWidth: 640 }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+      <div className="page-header">
         <h1>Manage Restaurants</h1>
         {mode === 'list' && (
           <button type="button" className="btn btn-primary btn-sm" onClick={startCreate}>
@@ -166,6 +168,19 @@ export default function AdminRestaurants() {
                 <label htmlFor="address">Address</label>
                 <input id="address" name="address" value={form.address} onChange={handleChange} required />
                 {formErrors.address && <div className="field-error">{formErrors.address[0]}</div>}
+              </div>
+
+              <div className="field">
+                <label htmlFor="image">Image URL (optional)</label>
+                <input
+                  id="image"
+                  name="image"
+                  value={form.image}
+                  onChange={handleChange}
+                  placeholder="https://example.com/restaurant.jpg"
+                />
+                {formErrors.image && <div className="field-error">{formErrors.image[0]}</div>}
+                {form.image && <div className="thumb thumb-lg" style={{ marginTop: 8, backgroundImage: `url(${form.image})` }} />}
               </div>
 
               <div style={{ display: 'flex', gap: 12 }}>
@@ -261,19 +276,22 @@ export default function AdminRestaurants() {
           <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
             {restaurants.map((restaurant) => (
               <div key={restaurant.id} className="card">
-                <div className="card-body" style={{ display: 'flex', justifyContent: 'space-between', gap: 12 }}>
-                  <div>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                      <strong>{restaurant.name}</strong>
-                      <span className={`badge ${restaurant.is_active ? 'badge-success' : 'badge-muted'}`}>
-                        {restaurant.is_active ? 'Active' : 'Inactive'}
-                      </span>
+                <div className="card-body list-row">
+                  <div className="thumb-row">
+                    {restaurant.image && <div className="thumb" style={{ backgroundImage: `url(${restaurant.image})` }} />}
+                    <div>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                        <strong>{restaurant.name}</strong>
+                        <span className={`badge ${restaurant.is_active ? 'badge-success' : 'badge-muted'}`}>
+                          {restaurant.is_active ? 'Active' : 'Inactive'}
+                        </span>
+                      </div>
+                      <p style={{ fontSize: 14, margin: '2px 0 0' }}>
+                        {managerName(restaurant.manager_id) || 'No manager assigned'}
+                      </p>
                     </div>
-                    <p style={{ fontSize: 14, margin: '2px 0 0' }}>
-                      {managerName(restaurant.manager_id) || 'No manager assigned'}
-                    </p>
                   </div>
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+                  <div className="list-row-actions">
                     <button type="button" className="btn btn-secondary btn-sm" onClick={() => startEdit(restaurant)}>
                       Edit
                     </button>

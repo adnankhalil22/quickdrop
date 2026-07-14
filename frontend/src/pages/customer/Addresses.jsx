@@ -83,7 +83,7 @@ export default function Addresses() {
 
   return (
     <div className="container" style={{ maxWidth: 640 }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+      <div className="page-header">
         <h1>My Addresses</h1>
         {mode === 'list' && (
           <button type="button" className="btn btn-primary btn-sm" onClick={startCreate}>
@@ -120,7 +120,7 @@ export default function Addresses() {
         <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
           {addresses.map((address) => (
             <div key={address.id} className="card">
-              <div className="card-body" style={{ display: 'flex', justifyContent: 'space-between', gap: 12 }}>
+              <div className="card-body list-row">
                 <div>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}>
                     <strong>{address.label}</strong>
@@ -135,7 +135,7 @@ export default function Addresses() {
                   </p>
                   {address.details && <p style={{ fontSize: 13, margin: 0 }}>{address.details}</p>}
                 </div>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+                <div className="list-row-actions">
                   <button type="button" className="btn btn-secondary btn-sm" onClick={() => startEdit(address)}>
                     Edit
                   </button>
