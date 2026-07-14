@@ -71,6 +71,13 @@ export default function ManagerDashboard() {
             <p style={{ fontSize: 14 }}>Add items, set prices, and mark availability.</p>
           </div>
         </Link>
+
+        <Link to="/manager/orders" className="card" style={{ display: 'block', color: 'inherit' }}>
+          <div className="card-body">
+            <h3>Orders</h3>
+            <p style={{ fontSize: 14 }}>Accept, reject, and track incoming orders.</p>
+          </div>
+        </Link>
       </div>
     </div>
   );

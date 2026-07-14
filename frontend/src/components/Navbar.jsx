@@ -36,6 +36,7 @@ export default function Navbar() {
               <Link to="/manager/restaurant">Restaurant</Link>
               <Link to="/manager/categories">Categories</Link>
               <Link to="/manager/menu-items">Menu Items</Link>
+              <Link to="/manager/orders">Orders</Link>
             </>
           )}
 

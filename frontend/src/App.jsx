@@ -17,6 +17,8 @@ import ManagerDashboard from './pages/manager/ManagerDashboard';
 import ManagerRestaurant from './pages/manager/ManagerRestaurant';
 import ManagerCategories from './pages/manager/ManagerCategories';
 import ManagerMenuItems from './pages/manager/ManagerMenuItems';
+import ManagerOrders from './pages/manager/ManagerOrders';
+import ManagerOrderDetail from './pages/manager/ManagerOrderDetail';
 
 export default function App() {
   return (
@@ -44,6 +46,8 @@ export default function App() {
               <Route path="manager/restaurant" element={<ManagerRestaurant />} />
               <Route path="manager/categories" element={<ManagerCategories />} />
               <Route path="manager/menu-items" element={<ManagerMenuItems />} />
+              <Route path="manager/orders" element={<ManagerOrders />} />
+              <Route path="manager/orders/:id" element={<ManagerOrderDetail />} />
             </Route>
           </Route>
         </Routes>
